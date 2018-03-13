@@ -15,7 +15,7 @@
 class projectType : public toolType {
   
     friend ostream& operator<<(ostream& osObject, projectType project);
-    friend istream& operator>>(ostream& isObject, projectType project);
+    friend istream& operator>>(istream& isObject, projectType project);
 
 public:
     
@@ -53,14 +53,13 @@ public:
 private:
     
     string projectName;
-    string description;
+	string description[5];
     projectInfo progress;
     
-    char startDate[8];
-    char endDate[8];
+    string startDate;
+    string endDate;
     
     map<string, toolType> employeeMap;
-    //map<string, toolType> toolMap;
     
 };
 

@@ -10,14 +10,23 @@
 #include <iostream>
 using namespace std;
 
+projectType::projectType(string name, string desc, projectInfo i,
+	int start[6], int end[6]) 
+	:projectName(name), description(desc), progress(i) {
+
+	setStartDate(start);
+	setEndDate(end);
+
+}
+
 ostream& operator<<(ostream& osObject, projectType project) {
     
     osObject << project.projectName << endl;
     osObject << project.getStartDate() << " - " << project.getEndDate() << endl;
     osObject << project.getDescription() << endl;
     
-    (project.getStatus() == 0)? osObject << "Incomplete" :
-    (project.getStatus() == 1)? osObject << "Complete" : osObject << "Abandoned";
+    (project.getStatus() == 0)? osObject << "INCOMPLETE" :
+    (project.getStatus() == 1)? osObject << "COMPLETE" : osObject << "ABANDONED";
     osObject << endl;
     
     for (auto itr: project.employeeMap)
@@ -27,8 +36,23 @@ ostream& operator<<(ostream& osObject, projectType project) {
 }
 
 istream& operator>>(istream& isObject, projectType project) {
-    
-    return isObject;
+
+	string status;
+	char c;
+
+	isObject >> project.projectName;
+	isObject >> startDate >> c >> endDate; 
+
+	isObject >> project.description;
+	isObject >> progress;
+
+
+	for (auto itr : project.employeeMap)
+		isObject >> itr.second;
+
+
+	return isObject;
+
 }
 
 void projectType::setProjectName(string name) {
@@ -41,13 +65,15 @@ void projectType::writeDescription(string desc) {
 
 void projectType::setStartDate(int start[6]) {
     
-    int i = 0, j = 0;
-    while (i < 8) {
-        if (i == 2 || i == 5)
-            startDate[i++] = '/';
-        else
-            startDate[i++] = start[j++];
-    }
+	int i = 0, j = 0;
+	while (i < 8) {
+		if (i == 2 || i == 5)
+			startDate[i++] = '/';
+		else
+			startDate[i++] = start[j++];
+	}
+	
+    
 }
 
 void projectType::setEndDate(int end[6]) {
@@ -94,6 +120,10 @@ string projectType::getEndDate() const {
     
     return endDate;
     
+}
+
+string projectType::getDescription() const {
+	return description;
 }
 
 void projectType::printEmployeeDatabase() {
