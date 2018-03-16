@@ -35,7 +35,9 @@ public:
     
     void employ(toolType employee);
     void dismiss(toolType employee);
-    
+   
+	void increasePriority();
+	void decreasePriority();
     
     statusType getEmployeeStatus(toolType employee) const;
     projectInfo getProgress() const;
@@ -44,10 +46,11 @@ public:
     string getEndDate() const;
     
     string getDescription() const;
+
+	int getPriority() const;
     
     void printEmployeeDatabase();
     void printProjectInfo();
-    
     
     
 private:
@@ -60,14 +63,14 @@ private:
     
     string startDate;
     string endDate;
-    
+
+	int priority;
+
     map<string, toolType> employeeMap;
     
 };
 
 
-
-#include <stdio.h>
 
 
 
