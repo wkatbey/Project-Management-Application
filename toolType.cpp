@@ -8,6 +8,33 @@
 
 #include "toolType.h"
 
+ostream& operator<<(ostream& osObject, toolType& tool) {
+	
+	osObject << tool.toolName;
+	
+	(tool.toolStatus == 0) ?  osObject << "NOT_AVAILABLE"
+		: (tool.toolStatus == 1) ? osObject << "WORKING" 
+		: (tool.toolStatus == 2)?  osObject << "NEEDS_MAINTENANCE" : osObject << "DISMISSED";
+	return osObject;
+}
+
+istream& operator>>(istream& isObject, toolType& tool) {
+
+	string status;
+
+	isObject >> tool.toolName;
+
+	isObject >> status;
+
+	(status == "NOT_AVAILABLE") ? tool.toolStatus = toolType::NOT_AVAILABLE
+		: (status == "WORKING") ? tool.toolStatus = toolType::WORKING
+		: (status == "NEEDS_MAINTENANCE") ? tool.toolStatus = toolType::NEEDS_MAINTENANCE 
+		: tool.toolStatus = toolType::DISMISSED;
+
+	return isObject;
+}
+
+
 toolType::toolType(string name, statusType i)
 : toolName(name), toolStatus(i)
 {}

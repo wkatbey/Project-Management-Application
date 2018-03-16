@@ -41,18 +41,19 @@ istream& operator>>(istream& isObject, projectType project) {
 	char c;
 
 	isObject >> project.projectName;
-	isObject >> startDate >> c >> endDate; 
+	isObject >> project.startDate >> c >> project.endDate; 
 
 	isObject >> project.description;
-	isObject >> progress;
 
+	isObject >> status;
+
+	(status == "INCOMPLETE") ? project.progress = projectType::INCOMPLETE : 
+		(status == "COMPLETE") ? project.completeProject() : project.abandonProject();
 
 	for (auto itr : project.employeeMap)
 		isObject >> itr.second;
 
-
 	return isObject;
-
 }
 
 void projectType::setProjectName(string name) {
@@ -60,7 +61,7 @@ void projectType::setProjectName(string name) {
 }
 
 void projectType::writeDescription(string desc) {
-    description = desc;
+	description = desc;
 }
 
 void projectType::setStartDate(int start[6]) {
@@ -92,6 +93,10 @@ void projectType::completeProject() {
 
 void projectType::abandonProject() {
     progress = ABANDONED;
+}
+
+void projectType::setProjectIncomplete() {
+	progress = INCOMPLETE;
 }
 
 void projectType::employ(toolType employee) {

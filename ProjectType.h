@@ -51,9 +51,11 @@ public:
     
     
 private:
+
+	void setProjectIncomplete();
     
     string projectName;
-	string description[5];
+	string description;
     projectInfo progress;
     
     string startDate;
