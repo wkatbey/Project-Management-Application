@@ -9,7 +9,6 @@
 #ifndef toolType_h
 #define toolType_h
 
-#include <stdio.h>
 #include <string>
 using namespace std;
 
