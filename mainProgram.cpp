@@ -13,10 +13,16 @@ int main() {
 
 	//Indexing variable(s)
 	int c;
+	map<string, string>::iterator itr;
 	
 	//Menu Variables
-	char aMenu;
-	char bMenu;
+	char loginMenu;
+	
+	char adminMenu;
+	char maintenanceMenu;
+
+
+	char projectMenu;
 	char menuIndex;
 	
 	//File IO Variables
@@ -26,7 +32,19 @@ int main() {
 	//Temporary Project File
 	projectType *tempProject;
 
-	make_heap(projectDatabase.begin(), projectDatabase.end(), projectType::getPriority); //Converts the project database into a max-heap
+
+	//User variables
+	map<string, string> adminMap;
+	
+	//map<string, int> maintenanceMap;
+	//map<string, int> maintenancePassMap;
+	
+	string username;
+	string password;
+	bool userCorrect;
+
+
+	//make_heap(projectDatabase.begin(), projectDatabase.end(), projectType::getPriority); //Converts the project database into a max-heap
 	
 	readProject.open("Projects.txt");
 	c = 0;
@@ -34,14 +52,39 @@ int main() {
 		tempProject = new projectType;
 		readProject >> *tempProject;
 		projectDatabase.push_back(*tempProject);
-		push_heap(projectDatabase.begin(), projectDatabase.end());
+		//push_heap(projectDatabase.begin(), projectDatabase.end());
 	}
 	readProject.close();
 
+	//In this segment of code I'm inserting a new admin-user into the
+	//username and password hash tables
+	adminMap.insert(pair<string, string>("Admin", "password")); 
 
 
+	//The following function asks the user for their username and password,
+	//and then matches the combination with the specified account
+	
+	do {
 
+		userCorrect = false;
 
+		cin.clear();
+		cout << "Username: ";
+		getline(cin, username);
+		cin.clear();
+		cout << "Password: ";
+		getline(cin, password);
+
+		itr = adminMap.find(username);
+
+		if (itr == adminMap.end() || itr->second != password)
+			cout << "Wrong username or password" << endl;
+		else
+			userCorrect = true;
+
+	} while (userCorrect == 0);
+
+	
 
 
 
@@ -51,10 +94,13 @@ int main() {
 
 void listMenu() {
 
-	cout << "List Menu" << endl
+	cout << "Administrator Master Menu" << endl
+		<< "I  - Inbox" << endl
 		<< "P  - List all projects" << endl
+		<< "================================" << endl
 		<< "iP - Manage project 'i'" << endl
 		<< "i+ - Increase project i's priority" << endl
+		<< "================================" << endl
 		<< "M  - Display this menu again" << endl
 		<< "Q  - Exit menu" << endl;
 
@@ -62,7 +108,7 @@ void listMenu() {
 
 void projectMenu() {
 
-	cout << "Project Menu" << endl
+	cout << "Admin Project Menu" << endl
 		<< "P  - Display project information" << endl
 		<< "T  - Enter tool menu" << endl
 		<< "N  - Edit Name " << endl
@@ -75,7 +121,7 @@ void projectMenu() {
 }
 
 void toolMenu() {
-	cout << "Tool Menu" << endl
+	cout << "Admin Tool Menu" << endl
 		<< "P  - List all tools" << endl
 		<< "A  - Add tool" << endl
 		<< "Di - Dismiss tool 'i'" << endl
@@ -83,3 +129,15 @@ void toolMenu() {
 		<< "Q  - Return" << endl;
 		
 }
+
+void maintenanceMenu() {
+
+	cout << "Maintenance Master Menu" << endl
+	<< "M  - Maintenance List" << endl
+	<< "Mi - Tool 'i' needs maintenance" << endl
+	<< "Ri - Tool 'i' has been repaired" << endl
+	<< "Di - Mark tool 'i' for dismissal" << endl
+	<< "Q  - Return" << endl;
+
+}
+
