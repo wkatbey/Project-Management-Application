@@ -4,7 +4,8 @@
 #include <algorithm>
 #include <fstream>
 
-void listMenu();
+void administratorMenu();
+void moderatorMenu();
 
 
 int main() {
@@ -19,7 +20,7 @@ int main() {
 	char loginMenu;
 	
 	char adminMenu;
-	char maintenanceMenu;
+	char moderatorMenu;
 
 
 	char projectMenu;
@@ -35,6 +36,7 @@ int main() {
 
 	//User variables
 	map<string, string> adminMap;
+	map<string, string> modMap;
 	
 	//map<string, int> maintenanceMap;
 	//map<string, int> maintenancePassMap;
@@ -42,6 +44,7 @@ int main() {
 	string username;
 	string password;
 	bool userCorrect;
+	bool moderator;
 
 
 	//make_heap(projectDatabase.begin(), projectDatabase.end(), projectType::getPriority); //Converts the project database into a max-heap
@@ -59,6 +62,7 @@ int main() {
 	//In this segment of code I'm inserting a new admin-user into the
 	//username and password hash tables
 	adminMap.insert(pair<string, string>("Admin", "password")); 
+	modMap.insert(pair<string, string>("Moderator", "password"));
 
 
 	//The following function asks the user for their username and password,
@@ -66,6 +70,7 @@ int main() {
 	
 	do {
 
+		moderator = false;
 		userCorrect = false;
 
 		cin.clear();
@@ -75,24 +80,45 @@ int main() {
 		cout << "Password: ";
 		getline(cin, password);
 
-		itr = adminMap.find(username);
-
-		if (itr == adminMap.end() || itr->second != password)
-			cout << "Wrong username or password" << endl;
+		itrAdmin = adminMap.find(username);
+		
+		if (itrAdmin == adminMap.end()) {
+			
+			itrMod = modMap.find(username);
+	
+			if (itrMod != modMap.end() && itrMod->second == password) {
+				moderator = true;
+				userCorrect = true;
+			}
+		}
 		else
-			userCorrect = true;
+			if (itrAdmin->second == password)
+				userCorrect = true;
 
+		if (userCorrect == false) 
+			cout << "Wrong username or password" << endl;
+		
 	} while (userCorrect == 0);
 
-	
 
+	//The segment of code that follows the login takes the user 
+	//through their respective menus
+	if (moderator == true) {
+		moderatorMeu();
+		cin >> moderatorMenu;
+	}
+	else {
+		administratorMenu();
+		cin >> administratorMenu;
+
+	}
 
 
 
 	return 0;
 }
 
-void listMenu() {
+void administratorMenu() {
 
 	cout << "Administrator Master Menu" << endl
 		<< "I  - Inbox" << endl
@@ -130,7 +156,7 @@ void toolMenu() {
 		
 }
 
-void maintenanceMenu() {
+void moderatorMenu() {
 
 	cout << "Maintenance Master Menu" << endl
 	<< "M  - Maintenance List" << endl
