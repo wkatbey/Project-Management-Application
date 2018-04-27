@@ -39,12 +39,15 @@ public:
 	void increasePriority();
 	void decreasePriority();
     
+    void printSummary() const;
+    
     statusType getEmployeeStatus(toolType employee) const;
     projectInfo getProgress() const;
     
     string getStartDate() const;
     string getEndDate() const;
     
+    string getProjectName() const;
     string getDescription() const;
 
 	int getPriority() const;
@@ -67,6 +70,7 @@ private:
 	int priority;
 
     map<string, toolType> employeeMap;
+    //map<string,toolType> toolMap;
     
 };
 

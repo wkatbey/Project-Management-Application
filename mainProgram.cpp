@@ -6,26 +6,43 @@
 
 void administratorMenu();
 void moderatorMenu();
-
+void projectMenu();
+void toolMenu();
 
 int main() {
 
-	vector<projectType> projectDatabase; //Database that holds all project objects
+	map<string, projectType> projectDatabase; //Database that holds all project object
 
-	//Indexing variable(s)
+	//Indexing variable(s) & iterators
 	int c;
-	map<string, string>::iterator itr;
+	map<string, string>::iterator itrMod;
+    map<string,string>::iterator itrAdmin;
+    map<string, projectType>::iterator itrProj;
 	
 	//Menu Variables
 	char loginMenu;
+    char menuIndex;
 	
 	char adminMenu;
-	char moderatorMenu;
+	char modMenu;
 
+	char projMenu;
+    char tMenu;
 
-	char projectMenu;
-	char menuIndex;
-	
+    
+    //Booleans and Counters
+    bool userCorrect;
+    bool moderator;
+    int loginCounter;
+    
+    bool projectFound;
+    
+   
+    
+    //Variables used to edit information
+    string newName;
+    string newDesc;
+    
 	//File IO Variables
 	ifstream readProject;
 	ofstream writeProject;
@@ -43,8 +60,10 @@ int main() {
 	
 	string username;
 	string password;
-	bool userCorrect;
-	bool moderator;
+    
+    //Variables used to access a database
+     string projNameMenu;
+	
 
 
 	//make_heap(projectDatabase.begin(), projectDatabase.end(), projectType::getPriority); //Converts the project database into a max-heap
@@ -70,15 +89,21 @@ int main() {
 	
 	do {
 
+        loginCounter = 0;
+        
 		moderator = false;
 		userCorrect = false;
 
 		cin.clear();
 		cout << "Username: ";
-		getline(cin, username);
+        getline(cin, username);
+        
 		cin.clear();
 		cout << "Password: ";
 		getline(cin, password);
+        
+        
+        
 
 		itrAdmin = adminMap.find(username);
 		
@@ -96,20 +121,111 @@ int main() {
 				userCorrect = true;
 
 		if (userCorrect == false) 
-			cout << "Wrong username or password" << endl;
+            cout << "Wrong username or password." << endl;
+        
+        loginCounter++;
 		
-	} while (userCorrect == 0);
+	} while (userCorrect == 0 && loginCounter < 3);
 
 
 	//The segment of code that follows the login takes the user 
 	//through their respective menus
+
+    //If moderator bool was true, user navigates through Moderator
+    //Master Menu and subsequent menus.
 	if (moderator == true) {
-		moderatorMeu();
-		cin >> moderatorMenu;
+		moderatorMenu();
+		cin >> modMenu;
 	}
 	else {
 		administratorMenu();
-		cin >> administratorMenu;
+        cin >> adminMenu >> projNameMenu;
+        
+        switch (adminMenu) {
+            case 'I':
+                break;
+            case 'P':
+                for (itrProj = projectDatabase.begin();
+                     itrProj != projectDatabase.end(); itrProj++) {
+                   
+                    itrProj->second.printSummary();
+                }
+                break;
+            case 'E':
+                
+                projectFound = false;
+                
+                do {
+                    
+                    itrProj = projectDatabase.begin();
+                    while (itrProj != projectDatabase.end() && projectFound == false) {
+                        if (itrProj->first == projNameMenu)
+                            projectFound = true;
+                    }
+                    
+                    if (projectFound == false) {
+                        cout << "Error: Project Not Found" << endl;
+                        cin >> projNameMenu;
+                    }
+                    
+                } while (projectFound == false);
+                
+                //Administrator has chosen to manage a project
+                //Project Menu
+                projectMenu();
+                cin >> projMenu >> newName;
+                
+                switch (projMenu) {
+                    case 'P':
+                        cout << projectDatabase[projNameMenu];
+                        break;
+                    case 'T':
+                        toolMenu();
+                        cin >> tMenu;
+                        
+                        switch (tMenu) {
+                            case 'P':
+                                //projectDatabase[projNameMenu].printAllTools();
+                                break;
+                            case 'A':
+                                //projectDatabase[projNameMenu].addTool(string name);
+                                break;
+                            case 'D':
+                                //projectDatabase[projNameMenu].dismissTool(string name);
+                                break;
+                            case 'M':
+                                //projectDatabase[projNameMenu].toolNeedsMaintenance(string name);
+                                break;
+                        }
+                        
+                        
+                        break;
+                    case 'N':
+                        projectDatabase[projNameMenu].setProjectName(newName);
+                        
+                        //projNameMenu = newName;
+                        break;
+                    case 'D':
+                        getline(cin, newDesc);
+                        projectDatabase[projNameMenu].writeDescription(newDesc);
+                        break;
+                    case 'A':
+                        projectDatabase[projNameMenu].abandonProject();
+                        break;
+                    case 'C':
+                        projectDatabase[projNameMenu].completeProject();
+                        break;
+                }
+                break;
+            case 'M':
+                administratorMenu();
+                break;
+            case 'Q':
+                break;
+        } //end administrator switch statement
+        
+        
+        
 
 	}
 
@@ -124,8 +240,7 @@ void administratorMenu() {
 		<< "I  - Inbox" << endl
 		<< "P  - List all projects" << endl
 		<< "================================" << endl
-		<< "iP - Manage project 'i'" << endl
-		<< "i+ - Increase project i's priority" << endl
+		<< "E - Manage project 'Name'" << endl
 		<< "================================" << endl
 		<< "M  - Display this menu again" << endl
 		<< "Q  - Exit menu" << endl;
@@ -137,7 +252,8 @@ void projectMenu() {
 	cout << "Admin Project Menu" << endl
 		<< "P  - Display project information" << endl
 		<< "T  - Enter tool menu" << endl
-		<< "N  - Edit Name " << endl
+        << "E  - Enter employee menu" << endl
+		<< "N + Name  - Edit Name " << endl
 		<< "D  - Edit Description" << endl
 		<< "================================" << endl
 		<< "A  - Abandon Project" << endl
@@ -147,7 +263,7 @@ void projectMenu() {
 }
 
 void toolMenu() {
-	cout << "Admin Tool Menu" << endl
+	cout << "Tool Menu" << endl
 		<< "P  - List all tools" << endl
 		<< "A  - Add tool" << endl
 		<< "Di - Dismiss tool 'i'" << endl

@@ -108,6 +108,18 @@ void projectType::dismiss(toolType employee) {
     employeeMap[employee.getName()].setStatus(DISMISSED);
 }
 
+void projectType::printSummary() const {
+    cout << getProjectName() << endl;
+    cout << getDescription() << endl;
+    cout << getStartDate() << " - "
+    << getEndDate() << endl;
+}
+
+
+string projectType::getProjectName() const {
+    return projectName;
+}
+
 toolType::statusType projectType::getEmployeeStatus(toolType employee) const {
      return employeeMap.at(employee.getName()).getStatus();
 }
