@@ -42,6 +42,7 @@ int main() {
     //Variables used to edit information
     string newName;
     string newDesc;
+    toolType::statusType toolStatus;
     
 	//File IO Variables
 	ifstream readProject;
@@ -49,7 +50,7 @@ int main() {
 
 	//Temporary Project File
 	projectType *tempProject;
-
+    toolType *tempTool;
 
 	//User variables
 	map<string, string> adminMap;
@@ -161,6 +162,7 @@ int main() {
                     while (itrProj != projectDatabase.end() && projectFound == false) {
                         if (itrProj->first == projNameMenu)
                             projectFound = true;
+                        
                     }
                     
                     if (projectFound == false) {
@@ -185,16 +187,23 @@ int main() {
                         
                         switch (tMenu) {
                             case 'P':
-                                //projectDatabase[projNameMenu].printAllTools();
+                                projectDatabase[projNameMenu].printAllTools();
                                 break;
                             case 'A':
-                                //projectDatabase[projNameMenu].addTool(string name);
+                                
+                                cin >> newName;
+                                //ToolStatus input
+                                
+                                tempTool = new toolType(newName,WORKING) //Working by default, placeholder
+                                
+                                
+                                projectDatabase[projNameMenu].addTool(*tempTool);
                                 break;
                             case 'D':
-                                //projectDatabase[projNameMenu].dismissTool(string name);
+                                projectDatabase[projNameMenu].removeTool(string name);
                                 break;
                             case 'M':
-                                //projectDatabase[projNameMenu].toolNeedsMaintenance(string name);
+                                projectDatabase[projNameMenu].markForMaintenance(string name);
                                 break;
                         }
                         

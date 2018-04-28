@@ -47,6 +47,17 @@ void toolType::setStatus(statusType i) {
     toolStatus = i;
 }
 
+void toolType::printSummary() const {
+    cout << toolName << " ";
+    
+    (toolStatus == 0) ?  cout << "NOT AVAILABLE"
+    : (toolStatus == 1) ? cout << "WORKING"
+    : (toolStatus == 2)?  cout << "NEEDS MAINTENANCE" : cout << "DISMISSED";
+    
+    cout << endl;
+
+}
+
 string toolType::getName() const {
     return toolName;
 }

@@ -152,5 +152,30 @@ void projectType::printProjectInfo() {
     cout << *this;
 }
 
+void projectType::printAllTools() const {
+    for (auto itr: toolMap)
+        itr.second.printSummary();
+}
+
+void projectType::addTool(toolType tool) {
+    toolMap.insert(pair<string,toolType>(tool.getName(),tool));
+    
+}
+void projectType::removeTool(string toolName) {
+    toolMap.erase(toolName);
+}
+
+void projectType::markForMaintenance(string toolName) {
+    toolMap[toolName].setStatus(NEEDS_MAINTENANCE);
+}
+
+void projectType::markMaintained(string toolName) {
+    toolMap[toolName].setStatus(WORKING);
+}
+
+toolType::statusType projectType::getToolStatus(string toolName) const {
+    
+    return toolMap[toolName].getStatus();
+}
 
 

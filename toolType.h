@@ -10,6 +10,7 @@
 #define toolType_h
 
 #include <string>
+#include <iostream>
 using namespace std;
 
 class toolType {
@@ -24,6 +25,8 @@ public:
     
     void setName(string name);
     void setStatus(statusType i);
+    
+    void printSummary() const;
     
     string getName() const;
     statusType getStatus() const;
