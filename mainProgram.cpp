@@ -3,11 +3,13 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+using namespace std;
 
 void administratorMenu();
 void moderatorMenu();
 void projectMenu();
 void toolMenu();
+
 
 int main() {
 
@@ -162,10 +164,8 @@ int main() {
                 projectFound = false;
                 
                 do {
-                    
                     if (projectDatabase.count("projNameMenu") != 0)
                         projectFound = true;
-                    
                     
                     if (projectFound == false) {
                         cout << "Error: Project Not Found" << endl;
@@ -185,7 +185,7 @@ int main() {
                         break;
                     case 'T':
                         toolMenu();
-                        cin >> tMenu;
+                        cin >> tMenu >> newName;
                         
                         switch (tMenu) {
                             case 'P':
@@ -193,17 +193,22 @@ int main() {
                                 break;
                             case 'A':
                                 
-                                cin >> newName;
-                            
                                 tempTool = new toolType(newName); //NOT_AVAILABLE by default, placeholder
                                 
                                 projectDatabase[projNameMenu].addTool(*tempTool);
+                                
+                                delete tempTool;
                                 break;
                             case 'D':
-                                projectDatabase[projNameMenu].removeTool(string name);
+                                
+                                //projectDatabase[projNameMenu].doesToolExist(newName);
+                                projectDatabase[projNameMenu].removeTool(newName);
+                                
                                 break;
                             case 'M':
-                                projectDatabase[projNameMenu].markForMaintenance(string name);
+                                
+                                projectDatabase[projNameMenu].markForMaintenance(newName);
+                                
                                 break;
                         }
                         

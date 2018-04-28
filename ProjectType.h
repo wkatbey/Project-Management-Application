@@ -10,7 +10,7 @@
 #define ProjectType_H
 #include "toolType.h"
 #include <map>
-
+using namespace std;
 
 class projectType : public toolType {
   
@@ -49,7 +49,7 @@ public:
     
     int getPriority() const;
     
-    //Employee Functions
+    //Employee Functions//
     
     void employ(toolType employee);
     void dismiss(toolType employee);
@@ -58,7 +58,7 @@ public:
     
     statusType getEmployeeStatus(toolType employee) const;
     
-    //Tool Functions
+    //Tool Functions//
     
     void printAllTools() const;
     
@@ -67,8 +67,10 @@ public:
     
     void markForMaintenance(string tool);
     void markMaintained(string tool);
-   
-    statusType getToolStatus(string tool) const;
+    
+    bool doesToolExist(string tool); //Cannot be const
+    
+    statusType getToolStatus(string tool); //Cannot be const
     
     
     

@@ -173,9 +173,14 @@ void projectType::markMaintained(string toolName) {
     toolMap[toolName].setStatus(WORKING);
 }
 
-toolType::statusType projectType::getToolStatus(string toolName) const {
-    
+toolType::statusType projectType::getToolStatus(string toolName) {
     return toolMap[toolName].getStatus();
+}
+
+bool projectType::doesToolExist(string toolName)  {
+    if (toolMap.count(toolName) == 0)
+        return false;
+    return true;
 }
 
 
