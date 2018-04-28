@@ -40,9 +40,16 @@ int main() {
    
     
     //Variables used to edit information
+    //and create temporary variables
     string newName;
     string newDesc;
-    toolType::statusType toolStatus;
+    
+    enum statusType{NOT_AVAILABLE, WORKING, NEEDS_MAINTENANCE, DISMISSED};
+    statusType toolStatus;
+    
+    
+    
+    
     
 	//File IO Variables
 	ifstream readProject;
@@ -63,7 +70,7 @@ int main() {
 	string password;
     
     //Variables used to access a database
-     string projNameMenu;
+    string projNameMenu;
 	
 
 
@@ -74,9 +81,9 @@ int main() {
 	while (!readProject.eof() && c < projectDatabase.size()) {
 		tempProject = new projectType;
 		readProject >> *tempProject;
-		projectDatabase.push_back(*tempProject);
+		projectDatabase.insert(pair<string,projectType>(tempProject->getProjectName(),*tempProject));
 		//push_heap(projectDatabase.begin(), projectDatabase.end());
-	}
+    }
 	readProject.close();
 
 	//In this segment of code I'm inserting a new admin-user into the
@@ -146,10 +153,8 @@ int main() {
             case 'I':
                 break;
             case 'P':
-                for (itrProj = projectDatabase.begin();
-                     itrProj != projectDatabase.end(); itrProj++) {
-                   
-                    itrProj->second.printSummary();
+                for (auto itr: projectDatabase) {
+                    itr.second.printSummary();
                 }
                 break;
             case 'E':
@@ -158,12 +163,9 @@ int main() {
                 
                 do {
                     
-                    itrProj = projectDatabase.begin();
-                    while (itrProj != projectDatabase.end() && projectFound == false) {
-                        if (itrProj->first == projNameMenu)
-                            projectFound = true;
-                        
-                    }
+                    if (projectDatabase.count("projNameMenu") != 0)
+                        projectFound = true;
+                    
                     
                     if (projectFound == false) {
                         cout << "Error: Project Not Found" << endl;
@@ -192,10 +194,8 @@ int main() {
                             case 'A':
                                 
                                 cin >> newName;
-                                //ToolStatus input
-                                
-                                tempTool = new toolType(newName,WORKING) //Working by default, placeholder
-                                
+                            
+                                tempTool = new toolType(newName); //NOT_AVAILABLE by default, placeholder
                                 
                                 projectDatabase[projNameMenu].addTool(*tempTool);
                                 break;
