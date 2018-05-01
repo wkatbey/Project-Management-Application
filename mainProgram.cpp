@@ -36,10 +36,7 @@ int main() {
     bool userCorrect;
     bool moderator;
     int loginCounter;
-    
     bool projectFound;
-    
-   
     
     //Variables used to edit information
     //and create temporary variables
@@ -48,10 +45,9 @@ int main() {
     
     enum statusType{NOT_AVAILABLE, WORKING, NEEDS_MAINTENANCE, DISMISSED};
     statusType toolStatus;
-    
-    
-    
-    
+
+	//Variables used to access a database
+	string projIndex;
     
 	//File IO Variables
 	ifstream readProject;
@@ -71,11 +67,7 @@ int main() {
 	string username;
 	string password;
     
-    //Variables used to access a database
-    string projNameMenu;
-	
-
-
+  
 	//make_heap(projectDatabase.begin(), projectDatabase.end(), projectType::getPriority); //Converts the project database into a max-heap
 	
 	readProject.open("Projects.txt");
@@ -111,9 +103,6 @@ int main() {
 		cin.clear();
 		cout << "Password: ";
 		getline(cin, password);
-        
-        
-        
 
 		itrAdmin = adminMap.find(username);
 		
@@ -149,10 +138,12 @@ int main() {
 	}
 	else {
 		administratorMenu();
-        cin >> adminMenu >> projNameMenu;
+		//istream::cin.getline(adminMenu, 32);
+		//getline(cin, projIndex)
         
         switch (adminMenu) {
             case 'I':
+				//Requires the creation of an Administrator Object
                 break;
             case 'P':
                 for (auto itr: projectDatabase) {
@@ -164,12 +155,12 @@ int main() {
                 projectFound = false;
                 
                 do {
-                    if (projectDatabase.count("projNameMenu") != 0)
+                    if (projectDatabase.count(projIndex) != 0)
                         projectFound = true;
                     
                     if (projectFound == false) {
                         cout << "Error: Project Not Found" << endl;
-                        cin >> projNameMenu;
+                        cin >> projIndex;
                     }
                     
                 } while (projectFound == false);
@@ -181,7 +172,7 @@ int main() {
                 
                 switch (projMenu) {
                     case 'P':
-                        cout << projectDatabase[projNameMenu];
+                        cout << projectDatabase[projIndex];
                         break;
                     case 'T':
                         toolMenu();
@@ -189,25 +180,26 @@ int main() {
                         
                         switch (tMenu) {
                             case 'P':
-                                projectDatabase[projNameMenu].printAllTools();
+                                projectDatabase[projIndex].printToolDatabase();
                                 break;
                             case 'A':
                                 
                                 tempTool = new toolType(newName); //NOT_AVAILABLE by default, placeholder
                                 
-                                projectDatabase[projNameMenu].addTool(*tempTool);
+                                projectDatabase[projIndex].addTool(*tempTool);
                                 
                                 delete tempTool;
                                 break;
                             case 'D':
                                 
-                                //projectDatabase[projNameMenu].doesToolExist(newName);
-                                projectDatabase[projNameMenu].removeTool(newName);
+                                projectDatabase[projIndex].doesToolExist(newName);
+                                projectDatabase[projIndex].removeTool(newName);
                                 
                                 break;
                             case 'M':
                                 
-                                projectDatabase[projNameMenu].markForMaintenance(newName);
+								projectDatabase[projIndex].doesToolExist(newName);
+                                projectDatabase[projIndex].markForMaintenance(newName);
                                 
                                 break;
                         }
@@ -215,19 +207,19 @@ int main() {
                         
                         break;
                     case 'N':
-                        projectDatabase[projNameMenu].setProjectName(newName);
+                        projectDatabase[projIndex].setProjectName(newName);
                         
-                        //projNameMenu = newName;
+                  
                         break;
                     case 'D':
                         getline(cin, newDesc);
-                        projectDatabase[projNameMenu].writeDescription(newDesc);
+                        projectDatabase[projIndex].writeDescription(newDesc);
                         break;
                     case 'A':
-                        projectDatabase[projNameMenu].abandonProject();
+                        projectDatabase[projIndex].abandonProject();
                         break;
                     case 'C':
-                        projectDatabase[projNameMenu].completeProject();
+                        projectDatabase[projIndex].completeProject();
                         break;
                 }
                 break;
