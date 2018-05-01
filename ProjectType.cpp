@@ -99,14 +99,7 @@ void projectType::setProjectIncomplete() {
 	progress = INCOMPLETE;
 }
 
-void projectType::employ(toolType employee) {
-    employeeMap[employee.getName()].setStatus(WORKING);
-}
 
-
-void projectType::dismiss(toolType employee) {
-    employeeMap[employee.getName()].setStatus(DISMISSED);
-}
 
 void projectType::printSummary() const {
     cout << getProjectName() << endl;
@@ -118,10 +111,6 @@ void projectType::printSummary() const {
 
 string projectType::getProjectName() const {
     return projectName;
-}
-
-toolType::statusType projectType::getEmployeeStatus(toolType employee) const {
-     return employeeMap.at(employee.getName()).getStatus();
 }
 
 projectType::projectInfo projectType::getProgress() const {
@@ -143,26 +132,25 @@ string projectType::getDescription() const {
 	return description;
 }
 
-void projectType::printEmployeeDatabase() {
-    for (auto itr: employeeMap)
-        std::cout << itr.second;
-}
-
 void projectType::printProjectInfo() {
     cout << *this;
 }
 
-void projectType::printAllTools() const {
+//Tool Functions//
+
+void projectType::printToolDatabase() const {
     for (auto itr: toolMap)
         itr.second.printSummary();
 }
 
 void projectType::addTool(toolType tool) {
     toolMap.insert(pair<string,toolType>(tool.getName(),tool));
+
+	toolMap[tool.getName()].setStatus(WORKING);
     
 }
 void projectType::removeTool(string toolName) {
-    toolMap.erase(toolName);
+	toolMap[toolName].setStatus(DISMISSED);
 }
 
 void projectType::markForMaintenance(string toolName) {
@@ -173,14 +161,51 @@ void projectType::markMaintained(string toolName) {
     toolMap[toolName].setStatus(WORKING);
 }
 
-toolType::statusType projectType::getToolStatus(string toolName) {
-    return toolMap[toolName].getStatus();
-}
-
-bool projectType::doesToolExist(string toolName)  {
+bool projectType::doesToolExist(string toolName) const {
     if (toolMap.count(toolName) == 0)
         return false;
+	
+	if (toolMap.at(toolName).getStatus() == DISMISSED)
+		return false;
+
     return true;
 }
 
+toolType::statusType projectType::getToolStatus(string toolName) {
+	return toolMap.at(toolName).getStatus();
+}
 
+//Employee Functions//
+
+void projectType::printEmployeeDatabase() {
+	for (auto itr : employeeMap)
+		std::cout << itr.second;
+}
+
+
+void projectType::employ(toolType employee) {
+
+	employeeMap.insert(pair<string, toolType>(employee.getName(), employee));
+
+	employeeMap[employee.getName()].setStatus[WORKING];
+}
+
+
+void projectType::dismiss(string employeeName) {
+	employeeMap[employeeName].setStatus(DISMISSED);
+}
+
+bool projectType::doesEmployeeExist(string employeeName) {
+	if (employeeMap.count(employeeName) == 0)
+		return false;
+
+	if (employeeMap.at(employeeName).getStatus() == DISMISSED)
+		return false;
+
+	return true;
+
+}
+
+toolType::statusType projectType::getEmployeeStatus(string employeeName) const {
+	return employeeMap.at(employeeName).getStatus();
+}

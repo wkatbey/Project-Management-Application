@@ -33,9 +33,6 @@ public:
     void completeProject();
     void abandonProject();
     
-    void increasePriority();
-    void decreasePriority();
-    
     void printSummary() const;
     void printProjectInfo(); //Marked for Removal
     
@@ -47,20 +44,21 @@ public:
     
     projectInfo getProgress() const;
     
-    int getPriority() const;
     
     //Employee Functions//
+
+	void printEmployeeDatabase();
     
     void employ(toolType employee);
-    void dismiss(toolType employee);
+    void dismiss(string employeeName);
+
+	bool doesEmployeeExist(string employeeName);
     
-    void printEmployeeDatabase();
-    
-    statusType getEmployeeStatus(toolType employee) const;
+    statusType getEmployeeStatus(string employeeName) const;
     
     //Tool Functions//
     
-    void printAllTools() const;
+    void printToolDatabase() const;  //Change to printToolDatabase
     
     void addTool(toolType tool);
     void removeTool(string tool);
@@ -68,10 +66,9 @@ public:
     void markForMaintenance(string tool);
     void markMaintained(string tool);
     
-    bool doesToolExist(string tool); //Cannot be const
-    
-    statusType getToolStatus(string tool); //Cannot be const
-    
+	bool doesToolExist(string tool) const; 
+
+    statusType getToolStatus(string tool); 
     
     
 private:
@@ -84,8 +81,6 @@ private:
     
     string startDate;
     string endDate;
-
-	int priority;
 
     map<string, toolType> employeeMap;
     map<string,toolType> toolMap;
