@@ -1,17 +1,9 @@
-//
-//  ProjectType.cpp
-//  ProjectManagementApplication
-//
-//  Created by Wassim Katbey on 12/29/17.
-//  Copyright © 2017 Wayne State University. All rights reserved.
-//
-
-#include "ProjectType.h"
+﻿#include "ProjectType.h"
 #include <iostream>
 using namespace std;
 
 projectType::projectType(string name, string desc, projectInfo i,
-	int start[6], int end[6]) 
+	string start, string end)
 	:projectName(name), description(desc), progress(i) {
 
 	setStartDate(start);
@@ -20,34 +12,34 @@ projectType::projectType(string name, string desc, projectInfo i,
 }
 
 ostream& operator<<(ostream& osObject, projectType project) {
-    
-    osObject << project.projectName << endl;
-    osObject << project.getStartDate() << " - " << project.getEndDate() << endl;
-    osObject << project.getDescription() << endl;
-    
-    (project.getStatus() == 0)? osObject << "INCOMPLETE" :
-    (project.getStatus() == 1)? osObject << "COMPLETE" : osObject << "ABANDONED";
-    osObject << endl;
-    
-    for (auto itr: project.employeeMap)
-        osObject << itr.second;
-    
-    return osObject;
+
+	osObject << project.projectName << endl;
+	osObject << project.getStartDate() << " - " << project.getEndDate() << endl;
+	osObject << project.getDescription() << endl;
+
+	(project.getStatus() == 0) ? osObject << "INCOMPLETE" :
+		(project.getStatus() == 1) ? osObject << "COMPLETE" : osObject << "ABANDONED";
+	osObject << endl;
+
+	for (auto itr : project.employeeMap)
+		osObject << itr.second;
+
+	return osObject;
 }
 
-istream& operator>>(istream& isObject, projectType project) {
+istream& operator >> (istream& isObject, projectType project) {
 
 	string status;
 	char c;
 
 	isObject >> project.projectName;
-	isObject >> project.startDate >> c >> project.endDate; 
+	isObject >> project.startDate >> c >> project.endDate;
 
 	isObject >> project.description;
 
 	isObject >> status;
 
-	(status == "INCOMPLETE") ? project.progress = projectType::INCOMPLETE : 
+	(status == "INCOMPLETE") ? project.progress = projectType::INCOMPLETE :
 		(status == "COMPLETE") ? project.completeProject() : project.abandonProject();
 
 	for (auto itr : project.employeeMap)
@@ -57,15 +49,15 @@ istream& operator>>(istream& isObject, projectType project) {
 }
 
 void projectType::setProjectName(string name) {
-    projectName = name;
+	projectName = name;
 }
 
 void projectType::writeDescription(string desc) {
 	description = desc;
 }
 
-void projectType::setStartDate(int start[6]) {
-    
+void projectType::setStartDate(string start) {
+
 	int i = 0, j = 0;
 	while (i < 8) {
 		if (i == 2 || i == 5)
@@ -73,26 +65,26 @@ void projectType::setStartDate(int start[6]) {
 		else
 			startDate[i++] = start[j++];
 	}
-	
-    
+
+
 }
 
-void projectType::setEndDate(int end[6]) {
-    int i = 0, j = 0;
-    while (i < 8) {
-        if (i == 2 || i == 5)
-            endDate[i++] = '/';
-        else
-            endDate[i++] = end[j++];
-    }
+void projectType::setEndDate(string end) {
+	int i = 0, j = 0;
+	while (i < 8) {
+		if (i == 2 || i == 5)
+			endDate[i++] = '/';
+		else
+			endDate[i++] = end[j++];
+	}
 }
 
 void projectType::completeProject() {
-    progress = COMPLETE;
+	progress = COMPLETE;
 }
 
 void projectType::abandonProject() {
-    progress = ABANDONED;
+	progress = ABANDONED;
 }
 
 void projectType::setProjectIncomplete() {
@@ -102,30 +94,30 @@ void projectType::setProjectIncomplete() {
 
 
 void projectType::printSummary() const {
-    cout << getProjectName() << endl;
-    cout << getDescription() << endl;
-    cout << getStartDate() << " - "
-    << getEndDate() << endl;
+	cout << getProjectName() << endl;
+	cout << getDescription() << endl;
+	cout << getStartDate() << " - "
+		<< getEndDate() << endl;
 }
 
 
 string projectType::getProjectName() const {
-    return projectName;
+	return projectName;
 }
 
 projectType::projectInfo projectType::getProgress() const {
-    return progress;
+	return progress;
 }
 
 string projectType::getStartDate() const {
 
-    return startDate;
+	return startDate;
 }
 
 string projectType::getEndDate() const {
-    
-    return endDate;
-    
+
+	return endDate;
+
 }
 
 string projectType::getDescription() const {
@@ -133,42 +125,42 @@ string projectType::getDescription() const {
 }
 
 void projectType::printProjectInfo() {
-    cout << *this;
+	cout << *this;
 }
 
 //Tool Functions//
 
 void projectType::printToolDatabase() const {
-    for (auto itr: toolMap)
-        itr.second.printSummary();
+	for (auto itr : toolMap)
+		itr.second.printSummary();
 }
 
 void projectType::addTool(toolType tool) {
-    toolMap.insert(pair<string,toolType>(tool.getName(),tool));
+	toolMap.insert(pair<string, toolType>(tool.getName(), tool));
 
 	toolMap[tool.getName()].setStatus(WORKING);
-    
+
 }
 void projectType::removeTool(string toolName) {
 	toolMap[toolName].setStatus(DISMISSED);
 }
 
 void projectType::markForMaintenance(string toolName) {
-    toolMap[toolName].setStatus(NEEDS_MAINTENANCE);
+	toolMap[toolName].setStatus(NEEDS_MAINTENANCE);
 }
 
 void projectType::markMaintained(string toolName) {
-    toolMap[toolName].setStatus(WORKING);
+	toolMap[toolName].setStatus(WORKING);
 }
 
 bool projectType::doesToolExist(string toolName) const {
-    if (toolMap.count(toolName) == 0)
-        return false;
-	
+	if (toolMap.count(toolName) == 0)
+		return false;
+
 	if (toolMap.at(toolName).getStatus() == DISMISSED)
 		return false;
 
-    return true;
+	return true;
 }
 
 toolType::statusType projectType::getToolStatus(string toolName) {
@@ -187,7 +179,7 @@ void projectType::employ(toolType employee) {
 
 	employeeMap.insert(pair<string, toolType>(employee.getName(), employee));
 
-	employeeMap[employee.getName()].setStatus[WORKING];
+	employeeMap[employee.getName()].setStatus(WORKING);
 }
 
 
