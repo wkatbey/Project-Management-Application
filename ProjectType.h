@@ -2,6 +2,7 @@
 #define ProjectType_H
 #include "toolType_.h"
 #include <map>
+#include <string>
 using namespace std;
 
 class projectType : public toolType {

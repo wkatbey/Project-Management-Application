@@ -1,5 +1,6 @@
 ﻿#include "ProjectType.h"
 #include <iostream>
+#include <string>
 using namespace std;
 
 projectType::projectType(string name, string desc, projectInfo i,
@@ -57,26 +58,11 @@ void projectType::writeDescription(string desc) {
 }
 
 void projectType::setStartDate(string start) {
-
-	int i = 0, j = 0;
-	while (i < 8) {
-		if (i == 2 || i == 5)
-			startDate[i++] = '/';
-		else
-			startDate[i++] = start[j++];
-	}
-
-
+	startDate = start;
 }
 
 void projectType::setEndDate(string end) {
-	int i = 0, j = 0;
-	while (i < 8) {
-		if (i == 2 || i == 5)
-			endDate[i++] = '/';
-		else
-			endDate[i++] = end[j++];
-	}
+	endDate = end;
 }
 
 void projectType::completeProject() {
@@ -111,13 +97,32 @@ projectType::projectInfo projectType::getProgress() const {
 
 string projectType::getStartDate() const {
 
-	return startDate;
+	string tempDate = "DD/MM/YY";
+
+	int j = 0;
+	for (int i = 0; i < 8; i++)
+		if (i == 2 || i == 5)
+			tempDate[i] = '/';
+		else
+			tempDate[i] = startDate[j++];
+
+
+	return tempDate;
 }
 
 string projectType::getEndDate() const {
 
-	return endDate;
+	string tempDate = "DD/MM/YY";
 
+	int j = 0;
+	for (int i = 0; i < 8; i++)
+		if (i == 2 || i == 5)
+			tempDate[i] = '/';
+		else
+			tempDate[i] = endDate[j++];
+
+
+	return tempDate;
 }
 
 string projectType::getDescription() const {

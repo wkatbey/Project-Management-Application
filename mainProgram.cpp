@@ -6,7 +6,7 @@
 using namespace std;
 
 void administratorMenu();
-void moderatorMenu();
+//void moderatorMenu();
 void projectMenu();
 void toolMenu();
 void projectCreationTool();
@@ -45,7 +45,7 @@ int main() {
 	string newDesc;
 
 	int descriptionLines;
-	string *projDescription;
+	string projDescription;
 	string startDate;
 	string endDate;
 	int tempProjStatus;
@@ -85,14 +85,12 @@ int main() {
 		tempProject = new projectType;
 		readProject >> *tempProject;
 		projectDatabase.insert(pair<string, projectType>(tempProject->getProjectName(), *tempProject));
-		//push_heap(projectDatabase.begin(), projectDatabase.end());
 	}
 	readProject.close();
 
 	//In this segment of code I'm inserting a new admin-user into the
 	//username and password hash tables
 	adminMap.insert(pair<string, string>("Admin", "password"));
-	modMap.insert(pair<string, string>("Moderator", "password"));
 
 
 	//The following function asks the user for their username and password,
@@ -102,7 +100,6 @@ int main() {
 
 		loginCounter = 0;
 
-		moderator = false;
 		userCorrect = false;
 
 		cin.clear();
@@ -115,19 +112,9 @@ int main() {
 
 		itrAdmin = adminMap.find(username);
 
-		if (itrAdmin == adminMap.end()) {
-
-			itrMod = modMap.find(username);
-
-			if (itrMod != modMap.end() && itrMod->second == password) {
-				moderator = true;
+		if (itrAdmin != adminMap.end() && itrAdmin->second == password) 
 				userCorrect = true;
-			}
-		}
-		else
-			if (itrAdmin->second == password)
-				userCorrect = true;
-
+	
 		if (userCorrect == false)
 			cout << "Wrong username or password." << endl;
 
@@ -141,15 +128,12 @@ int main() {
 
 	//If moderator bool was true, user navigates through Moderator
 	//Master Menu and subsequent menus.
-	if (moderator == true) {
-		moderatorMenu();
-		cin >> modMenu;
-	}
-	else {
-		administratorMenu();
-		cin >> adminMenu;
+		
+	administratorMenu();
+	cin >> adminMenu;
 
-		//User inputs 'E' and the Project Name
+	while (adminMenu != 'Q') {
+
 		if (adminMenu == 'E')
 			getline(cin, projIndex);
 
@@ -168,14 +152,10 @@ int main() {
 
 			cin.ignore();
 			getline(cin, projIndex);
-			cin >> descriptionLines;
-			projDescription = new string[descriptionLines];
 
-			for (int i = 0; i < descriptionLines; i++) {
-				cin.ignore();
-				getline(cin, projDescription[i]);
-			}
-				
+			cin.ignore();
+			getline(cin, projDescription);
+
 			cin >> startDate;
 
 			cin >> endDate;
@@ -197,14 +177,16 @@ int main() {
 					cout << "Incorrect Status, Input 0,1,2: ";
 					cin >> tempProjStatus;
 				}
-	
+
 			} while (error == true);
 
-			tempProject = new projectType(projIndex, *projDescription, projStatus, startDate, endDate);
+			tempProject = new projectType(projIndex, projDescription, projStatus, startDate, endDate);
 
 			projectDatabase.insert(pair<string, projectType>(projIndex, *tempProject));
 
-			//delete tempProject;
+			cout << projIndex << " is now in the Database" << endl;
+
+			delete tempProject;
 
 			break;
 		case 'E':
@@ -296,9 +278,15 @@ int main() {
 			break;
 		} //end administrator switch statement
 
-
-	
+		cin >> adminMenu;
 	}
+
+	writeProject.open("project.txt");
+	for (itrProj = projectDatabase.begin(); itrProj != projectDatabase.end(); itrProj++)
+		writeProject << itrProj->second;
+	writeProject.close();
+
+
 
 
 
@@ -308,7 +296,6 @@ int main() {
 void administratorMenu() {
 
 	cout << "Administrator Master Menu" << endl
-		<< "I  - Inbox" << endl
 		<< "P  - List all projects" << endl
 		<< "C  - Create a Project" << endl
 		<< "================================" << endl
@@ -344,24 +331,12 @@ void toolMenu() {
 
 }
 
-void moderatorMenu() {
-
-	cout << "Maintenance Master Menu" << endl
-		<< "M  - Maintenance List" << endl
-		<< "Mi - Tool 'i' needs maintenance" << endl
-		<< "Ri - Tool 'i' has been repaired" << endl
-		<< "Di - Mark tool 'i' for dismissal" << endl
-		<< "Q  - Return" << endl;
-
-}
-
 void projectCreationTool() {
 	cout << "Project Creation Tool" << endl
 		<< "To create a project, input the project" << endl
 		<< "variables in the following manner:" << endl
 		<< "(1) Input Project Name" << endl
-		<< "(2) Input the description line number" << endl
-		<< "(3) Input the description with variable number of lines" << endl
+		<< "(3) Input the description" << endl
 		<< "(4) Input the start date DD-MM-YY (w/o dashes)" << endl
 		<< "(5) Input the end date DD-MM-YY (w/o dashes)" << endl
 		<< "(6) If project is incomplete: Input 0" << endl
